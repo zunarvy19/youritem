@@ -30,9 +30,16 @@ export default defineConfig({
         }),
     ],
     server: {
+        origin:
+            process.env.VITE_DEV_SERVER_URL ?? 'http://localhost:5173',
+        hmr: {
+            host: process.env.VITE_HMR_HOST ?? 'localhost',
+            clientPort: 5173,
+        },
         proxy: {
-            '^/api': 'http://localhost:8000',
-            '^/sanctum': 'http://localhost:8000',
+            '^/api': process.env.VITE_BACKEND_URL ?? 'http://localhost:8000',
+            '^/sanctum':
+                process.env.VITE_BACKEND_URL ?? 'http://localhost:8000',
         },
         watch: {
             ignored: [

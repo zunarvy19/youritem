@@ -1,0 +1,71 @@
+x-app: &app
+  image: wisebuy-app:latest
+  build:
+    context: .
+    dockerfile: Dockerfile.production
+    target: app
+  env_file:
+    - .env.production
+  restart: unless-stopped
+  networks:
+    - app_internal
+    - shared_pg_network
+
+services:
+  app:
+    <<: *app
+    container_name: wisebuy_app
+    healthcheck:
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  web:
+    image: wisebuy-web:latest
+    container_name: wisebuy_web
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: web
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app_internal
+      - shared_net
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  queue:
+    <<: *app
+    container_name: wisebuy_queue
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+
+  migrate:
+    <<: *app
+    profiles: ["tools"]
+    restart: "no"
+    command: php artisan migrate --force
+    healthcheck:
+      disable: true
+
+networks:
+  app_internal:
+    name: wisebuy_internal
+  shared_net:
+    external: true
+    name: shared_net
+  shared_pg_network:
+    external: true
+    name: shared_pg_network
+

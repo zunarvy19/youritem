@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import AppIcon from '@/components/AppIcon.vue';
 
 export interface MenuItem {
@@ -15,9 +15,43 @@ const emit = defineEmits<{ select: [key: string] }>();
 
 const open = ref(false);
 const root = ref<HTMLElement | null>(null);
+const trigger = ref<HTMLButtonElement | null>(null);
+const menu = ref<HTMLElement | null>(null);
+const menuStyle = ref<Record<string, string>>({});
 
-function toggle(): void {
+async function toggle(): Promise<void> {
     open.value = !open.value;
+
+    if (!open.value || !trigger.value) {
+        return;
+    }
+
+    const triggerRect = trigger.value.getBoundingClientRect();
+    const menuWidth = 160;
+    const viewportPadding = 8;
+
+    menuStyle.value = {
+        top: `${triggerRect.bottom + 4}px`,
+        left: `${Math.min(
+            Math.max(viewportPadding, triggerRect.right - menuWidth),
+            window.innerWidth - menuWidth - viewportPadding,
+        )}px`,
+        width: `${menuWidth}px`,
+    };
+
+    await nextTick();
+
+    if (menu.value) {
+        const menuHeight = menu.value.offsetHeight;
+        const spaceBelow = window.innerHeight - triggerRect.bottom;
+
+        if (
+            spaceBelow < menuHeight + viewportPadding &&
+            triggerRect.top > menuHeight
+        ) {
+            menuStyle.value.top = `${triggerRect.top - menuHeight - 4}px`;
+        }
+    }
 }
 
 function choose(key: string): void {
@@ -26,9 +60,20 @@ function choose(key: string): void {
 }
 
 function onDocumentClick(event: MouseEvent): void {
-    if (open.value && root.value && !root.value.contains(event.target as Node)) {
+    const target = event.target as Node;
+
+    if (
+        open.value &&
+        root.value &&
+        !root.value.contains(target) &&
+        !menu.value?.contains(target)
+    ) {
         open.value = false;
     }
+}
+
+function close(): void {
+    open.value = false;
 }
 
 function onKeydown(event: KeyboardEvent): void {
@@ -40,20 +85,22 @@ function onKeydown(event: KeyboardEvent): void {
 onMounted(() => {
     document.addEventListener('click', onDocumentClick);
     document.addEventListener('keydown', onKeydown);
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
 });
 
 onBeforeUnmount(() => {
     document.removeEventListener('click', onDocumentClick);
     document.removeEventListener('keydown', onKeydown);
+    window.removeEventListener('resize', close);
+    window.removeEventListener('scroll', close, true);
 });
 </script>
 
 <template>
-    <div
-        ref="root"
-        class="relative inline-block text-left"
-    >
+    <div ref="root" class="relative inline-block text-left">
         <button
+            ref="trigger"
             type="button"
             class="rounded-lg p-2 text-neutral-400 transition-colors duration-150 hover:bg-neutral-100 hover:text-neutral-700"
             aria-haspopup="menu"
@@ -63,7 +110,9 @@ onBeforeUnmount(() => {
         >
             <AppIcon name="dots" />
         </button>
+    </div>
 
+    <Teleport to="body">
         <Transition
             enter-active-class="transition duration-100 ease-out"
             enter-from-class="scale-95 opacity-0"
@@ -74,7 +123,9 @@ onBeforeUnmount(() => {
         >
             <div
                 v-if="open"
-                class="absolute right-0 z-20 mt-1 w-40 origin-top-right overflow-hidden rounded-xl border border-neutral-200 bg-white py-1 shadow-lg"
+                ref="menu"
+                class="fixed z-50 origin-top-right overflow-hidden rounded-xl border border-neutral-200 bg-white py-1 shadow-lg"
+                :style="menuStyle"
                 role="menu"
             >
                 <button
@@ -95,5 +146,5 @@ onBeforeUnmount(() => {
                 </button>
             </div>
         </Transition>
-    </div>
+    </Teleport>
 </template>

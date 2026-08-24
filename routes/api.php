@@ -20,7 +20,9 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('/user', [CurrentUserController::class, 'show'])->name('api.user');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('api.logout');
 
-    Route::get('/categories', [CategoryController::class, 'index'])->name('api.categories.index');
+    Route::apiResource('categories', CategoryController::class)
+        ->only(['index', 'store', 'update', 'destroy'])
+        ->names('api.categories');
 
     Route::get('/wishlist-items', [WishlistItemController::class, 'index'])->name('api.wishlist-items.index');
     Route::post('/wishlist-items', [WishlistItemController::class, 'store'])->name('api.wishlist-items.store');

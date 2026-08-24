@@ -1,5 +1,31 @@
 # Development Guide
 
+## Local development dengan Docker
+
+Satu-satunya dependency di host adalah Docker Desktop (atau Docker Engine dengan
+Compose). PHP, Composer, Node.js, dependency aplikasi, queue worker, dan PostgreSQL
+berjalan di container.
+
+```bash
+docker compose up --build
+```
+
+Buka aplikasi di `http://localhost:8000`. Vite HMR berjalan di port `5173`, dan
+migrasi serta data demo dijalankan otomatis ketika stack dinyalakan. Login demo:
+`arvy@example.com` / `password123`.
+
+Perintah Artisan atau test dapat dijalankan tanpa memasang PHP di host:
+
+```bash
+docker compose exec app php artisan test
+docker compose exec app php artisan db:seed
+docker compose exec app php artisan migrate:fresh --seed
+```
+
+Hentikan container dengan `docker compose down`. Data PostgreSQL dan dependency
+tetap tersimpan di Docker volumes. Gunakan `docker compose down --volumes` hanya
+jika seluruh data development dan dependency volume memang ingin dihapus.
+
 ## Personal Purchase Planner
 
 **Version:** 1.0
