@@ -1,0 +1,118 @@
+<script setup lang="ts">
+import { RouterView, useRouter } from 'vue-router';
+import AppNavList from '@/components/AppNavList.vue';
+import type {NavItem} from '@/components/AppNavList.vue';
+import ToastHost from '@/components/ToastHost.vue';
+import { useAuth } from '@/composables/useAuth';
+
+const auth = useAuth();
+const router = useRouter();
+
+const mainNav: NavItem[] = [
+    { name: 'dashboard', label: 'Dashboard', to: '/', icon: 'home' },
+    { name: 'wishlist', label: 'Wishlist', to: '/wishlist', icon: 'heart' },
+    { name: 'categories', label: 'Categories', to: '/categories', icon: 'tag' },
+    { name: 'budget', label: 'Budget', to: '/budget', icon: 'wallet' },
+    { name: 'shopping', label: 'Shopping', to: '/shopping', icon: 'bag' },
+    { name: 'purchases', label: 'Purchase History', to: '/purchases', icon: 'clock' },
+];
+
+const profileNav: NavItem[] = [
+    { name: 'settings', label: 'Profile & Settings', to: '/settings', icon: 'user' },
+];
+
+const mobileNav: NavItem[] = [
+    { name: 'dashboard', label: 'Home', to: '/', icon: 'home' },
+    { name: 'wishlist', label: 'Wishlist', to: '/wishlist', icon: 'heart' },
+    { name: 'shopping', label: 'Shopping', to: '/shopping', icon: 'bag' },
+    { name: 'purchases', label: 'History', to: '/purchases', icon: 'clock' },
+    { name: 'settings', label: 'Profile', to: '/settings', icon: 'user' },
+];
+
+async function handleLogout(): Promise<void> {
+    await auth.logout();
+    await router.push({ name: 'login' });
+}
+</script>
+
+<template>
+    <div class="min-h-screen bg-neutral-50">
+        <!-- Desktop sidebar -->
+        <aside class="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-neutral-200/80 bg-white px-4 py-6 lg:flex">
+            <RouterLink
+                to="/"
+                class="mb-8 flex items-center gap-2.5 px-2"
+            >
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-sm font-extrabold text-white">
+                    Yi
+                </span>
+                <span class="text-lg font-extrabold tracking-tight text-neutral-900">YourItem</span>
+            </RouterLink>
+
+            <div class="flex-1 overflow-y-auto">
+                <AppNavList :items="mainNav" />
+
+                <div class="my-5 border-t border-neutral-100" />
+                <p class="mb-2 px-3 text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">Account</p>
+                <AppNavList :items="profileNav" />
+            </div>
+
+            <div class="border-t border-neutral-100 pt-4">
+                <div class="flex items-center gap-3 px-2">
+                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
+                        {{ auth.user.value?.name?.charAt(0)?.toUpperCase() }}
+                    </span>
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-semibold text-neutral-900">{{ auth.user.value?.name }}</p>
+                        <p class="truncate text-xs text-neutral-400">{{ auth.user.value?.email }}</p>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="btn-ghost mt-3 w-full justify-start px-2 text-sm"
+                    @click="handleLogout"
+                >
+                    Log out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Mobile header -->
+        <header class="sticky top-0 z-30 flex items-center justify-between border-b border-neutral-200/80 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
+            <RouterLink
+                to="/"
+                class="flex items-center gap-2"
+            >
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-extrabold text-white">
+                    Yi
+                </span>
+                <span class="font-extrabold tracking-tight text-neutral-900">YourItem</span>
+            </RouterLink>
+            <button
+                type="button"
+                class="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100"
+                aria-label="Log out"
+                @click="handleLogout"
+            >
+                Log out
+            </button>
+        </header>
+
+        <!-- Main content -->
+        <main class="px-4 py-6 pb-24 sm:px-6 lg:ml-64 lg:pb-10">
+            <div class="mx-auto max-w-5xl">
+                <RouterView />
+            </div>
+        </main>
+
+        <!-- Mobile bottom navigation -->
+        <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-neutral-200/80 bg-white/95 pt-1 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+            <AppNavList
+                :items="mobileNav"
+                compact
+            />
+        </nav>
+
+        <ToastHost />
+    </div>
+</template>
