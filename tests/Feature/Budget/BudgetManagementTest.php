@@ -59,7 +59,7 @@ it('records income and expense while keeping a cumulative balance', function ():
     $user = User::factory()->create();
 
     $this->actingAs($user)->postJson('/api/budget/transactions', [
-        'type' => 'INCOME', 'amount' => 1_000_000, 'description' => 'Salary',
+        'type' => 'INCOME', 'amount' => 1_000_000, 'description' => 'Salary', 'occurred_at' => '2026-08-25',
     ])->assertCreated();
     $this->actingAs($user)->postJson('/api/budget/transactions', [
         'type' => 'EXPENSE', 'amount' => 250_000, 'description' => 'Groceries',

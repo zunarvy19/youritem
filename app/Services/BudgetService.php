@@ -6,7 +6,7 @@ use App\Enums\BudgetTransactionType;
 use App\Models\Budget;
 use App\Models\BudgetTransaction;
 use App\Models\User;
-use Illuminate\Support\Carbon;
+use DateTimeInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -52,7 +52,7 @@ class BudgetService
         });
     }
 
-    public function record(User $user, BudgetTransactionType $type, int $amount, ?string $description, ?Carbon $occurredAt = null): BudgetTransaction
+    public function record(User $user, BudgetTransactionType $type, int $amount, ?string $description, ?DateTimeInterface $occurredAt = null): BudgetTransaction
     {
         return DB::transaction(function () use ($user, $type, $amount, $description, $occurredAt): BudgetTransaction {
             $budget = Budget::query()->firstOrCreate(['user_id' => $user->id], ['amount' => 0]);
