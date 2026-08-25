@@ -1,6 +1,11 @@
 import { ref } from 'vue';
 import { ApiError } from '@/services/apiClient';
-import { fetchCurrentUser, loginUser, logoutUser, registerUser } from '@/services/authService';
+import {
+    fetchCurrentUser,
+    loginUser,
+    logoutUser,
+    registerUser,
+} from '@/services/authService';
 import type { AuthUser } from '@/types';
 
 type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'guest';
@@ -38,8 +43,18 @@ async function login(email: string, password: string): Promise<AuthUser> {
     return response.data;
 }
 
-async function register(name: string, email: string, password: string, password_confirmation: string): Promise<AuthUser> {
-    const response = await registerUser({ name, email, password, password_confirmation });
+async function register(
+    name: string,
+    email: string,
+    password: string,
+    password_confirmation: string,
+): Promise<AuthUser> {
+    const response = await registerUser({
+        name,
+        email,
+        password,
+        password_confirmation,
+    });
     await refresh();
 
     return response.data;

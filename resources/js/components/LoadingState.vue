@@ -5,11 +5,7 @@ defineProps<{
 </script>
 
 <template>
-    <div
-        class="space-y-3"
-        role="status"
-        aria-label="Loading content"
-    >
+    <div class="space-y-3" role="status" aria-label="Loading content">
         <div
             v-for="n in lines ?? 4"
             :key="n"

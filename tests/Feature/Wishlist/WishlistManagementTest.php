@@ -3,10 +3,12 @@
 use App\Enums\Priority;
 use App\Enums\Purpose;
 use App\Enums\WishlistStatus;
+use App\Jobs\FetchWishlistPreview;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\WishlistItem;
 use Database\Seeders\CategorySeeder;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function (): void {
     $this->seed(CategorySeeder::class);
@@ -38,6 +40,24 @@ it('creates a wishlist item', function (): void {
         ->assertJsonPath('data.priority', Priority::High->value);
 
     expect($user->wishlistItems()->count())->toBe(1);
+});
+
+it('stores a product link and queues its preview', function (): void {
+    Queue::fake();
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->postJson('/api/wishlist-items', wishlistPayload([
+        'product_url' => 'https://example.com/products/headphones',
+    ]));
+
+    $response->assertCreated()->assertJsonPath('data.product_url', 'https://example.com/products/headphones');
+    Queue::assertPushed(FetchWishlistPreview::class, fn (FetchWishlistPreview $job): bool => $job->wishlistItemId === $response->json('data.id'));
+});
+
+it('rejects non-http product links', function (): void {
+    $user = User::factory()->create();
+    $this->actingAs($user)->postJson('/api/wishlist-items', wishlistPayload(['product_url' => 'file:///etc/passwd']))
+        ->assertUnprocessable()->assertJsonValidationErrors(['product_url']);
 });
 
 it('validates wishlist item payload', function (array $overrides): void {

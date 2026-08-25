@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import AppIcon from '@/components/AppIcon.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import EmptyState from '@/components/EmptyState.vue';
 import ErrorState from '@/components/ErrorState.vue';
 import OverflowMenu from '@/components/OverflowMenu.vue';
-import type {MenuItem} from '@/components/OverflowMenu.vue';
+import type { MenuItem } from '@/components/OverflowMenu.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PriorityBadge from '@/components/PriorityBadge.vue';
 import PurposeBadge from '@/components/PurposeBadge.vue';
@@ -19,9 +20,16 @@ import {
     restoreWishlistItem,
     useCategoriesLoader,
 } from '@/services/wishlistService';
-import type { Category, Priority, Purpose, WishlistItem, WishlistStatus } from '@/types';
+import type {
+    Category,
+    Priority,
+    Purpose,
+    WishlistItem,
+    WishlistStatus,
+} from '@/types';
 
 const toast = useToast();
+const router = useRouter();
 
 const items = ref<WishlistItem[]>([]);
 const categories = ref<Category[]>([]);
@@ -84,8 +92,8 @@ async function load(page = 1): Promise<void> {
 
 function onSearchInput(): void {
     if (searchTimer) {
-clearTimeout(searchTimer);
-}
+        clearTimeout(searchTimer);
+    }
 
     searchTimer = setTimeout(() => load(1), 300);
 }
@@ -115,22 +123,28 @@ function onSaved(): void {
 function menuFor(item: WishlistItem): MenuItem[] {
     if (item.status === 'ACTIVE') {
         return [
+            { key: 'detail', label: 'View details', icon: 'eye' },
             { key: 'edit', label: 'Edit', icon: 'pencil' },
             { key: 'archive', label: 'Archive', icon: 'archive', danger: true },
         ];
     }
 
-    return [{ key: 'restore', label: 'Restore', icon: 'restore' }];
+    return [
+        { key: 'detail', label: 'View details', icon: 'eye' },
+        { key: 'restore', label: 'Restore', icon: 'restore' },
+    ];
 }
 
 function onAction(item: WishlistItem, key: string): void {
-    if (key === 'edit') {
-openEdit(item);
-} else if (key === 'archive') {
-requestConfirm(item, 'archive');
-} else if (key === 'restore') {
-requestConfirm(item, 'restore');
-}
+    if (key === 'detail') {
+        void router.push({ name: 'wishlist-detail', params: { id: item.id } });
+    } else if (key === 'edit') {
+        openEdit(item);
+    } else if (key === 'archive') {
+        requestConfirm(item, 'archive');
+    } else if (key === 'restore') {
+        requestConfirm(item, 'restore');
+    }
 }
 
 function requestConfirm(item: WishlistItem, mode: 'archive' | 'restore'): void {
@@ -152,7 +166,9 @@ async function runConfirm(): Promise<void> {
         confirmState.open = false;
         await load(meta.current_page);
     } catch (error) {
-        toast.error(error instanceof ApiError ? error.message : 'Something went wrong.');
+        toast.error(
+            error instanceof ApiError ? error.message : 'Something went wrong.',
+        );
     } finally {
         confirmState.processing = false;
     }
@@ -185,10 +201,7 @@ function clearFilters(): void {
 
 <template>
     <section>
-        <PageHeader
-            title="Wishlist"
-            subtitle="Items you want to buy."
-        >
+        <PageHeader title="Wishlist" subtitle="Items you want to buy.">
             <template #actions>
                 <button
                     type="button"
@@ -196,21 +209,11 @@ function clearFilters(): void {
                     aria-label="Open filters"
                     @click="filtersOpen = true"
                 >
-                    <AppIcon
-                        name="funnel"
-                        class="h-4 w-4"
-                    />
+                    <AppIcon name="funnel" class="h-4 w-4" />
                     Filters
                 </button>
-                <button
-                    type="button"
-                    class="btn-primary"
-                    @click="openCreate"
-                >
-                    <AppIcon
-                        name="plus"
-                        class="h-4 w-4"
-                    />
+                <button type="button" class="btn-primary" @click="openCreate">
+                    <AppIcon name="plus" class="h-4 w-4" />
                     Add Item
                 </button>
             </template>
@@ -223,7 +226,7 @@ function clearFilters(): void {
                 type="search"
                 placeholder="Search items..."
                 aria-label="Search items"
-                class="input min-w-[12rem] max-w-xs flex-1"
+                class="input max-w-xs min-w-[12rem] flex-1"
                 @input="onSearchInput"
             />
 
@@ -305,11 +308,7 @@ function clearFilters(): void {
             </button>
         </div>
 
-        <div
-            v-if="loading"
-            role="status"
-            aria-label="Loading content"
-        >
+        <div v-if="loading" role="status" aria-label="Loading content">
             <div class="space-y-2">
                 <div
                     v-for="n in 5"
@@ -332,11 +331,7 @@ function clearFilters(): void {
             description="Start adding things you want to buy and we'll help you prioritize them."
         >
             <template #actions>
-                <button
-                    type="button"
-                    class="btn-primary"
-                    @click="openCreate"
-                >
+                <button type="button" class="btn-primary" @click="openCreate">
                     Add Your First Item
                 </button>
             </template>
@@ -368,8 +363,12 @@ function clearFilters(): void {
                 >
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
-                            <p class="truncate font-semibold text-neutral-900">{{ item.name }}</p>
-                            <p class="text-xs text-neutral-500">{{ item.category.name }}</p>
+                            <p class="truncate font-semibold text-neutral-900">
+                                {{ item.name }}
+                            </p>
+                            <p class="text-xs text-neutral-500">
+                                {{ item.category.name }}
+                            </p>
                         </div>
                         <OverflowMenu
                             :items="menuFor(item)"
@@ -382,9 +381,12 @@ function clearFilters(): void {
                         <span
                             v-if="item.status === 'ARCHIVED'"
                             class="badge border-neutral-200 bg-neutral-100 text-neutral-500"
-                        >Archived</span>
+                            >Archived</span
+                        >
                     </div>
-                    <p class="mt-2 font-bold text-neutral-900">{{ formatIdr(item.estimated_price) }}</p>
+                    <p class="mt-2 font-bold text-neutral-900">
+                        {{ formatIdr(item.estimated_price) }}
+                    </p>
                 </li>
             </ul>
 
@@ -392,13 +394,19 @@ function clearFilters(): void {
             <div class="card hidden overflow-hidden lg:block">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="border-b border-neutral-100 bg-neutral-50/70 text-xs tracking-wide text-neutral-400 uppercase">
+                        <tr
+                            class="border-b border-neutral-100 bg-neutral-50/70 text-xs tracking-wide text-neutral-400 uppercase"
+                        >
                             <th class="px-5 py-3.5 font-semibold">Item</th>
                             <th class="px-4 py-3.5 font-semibold">Category</th>
                             <th class="px-4 py-3.5 font-semibold">Priority</th>
                             <th class="px-4 py-3.5 font-semibold">Type</th>
-                            <th class="px-4 py-3.5 text-right font-semibold">Price</th>
-                            <th class="w-16 px-4 py-3.5"><span class="sr-only">Actions</span></th>
+                            <th class="px-4 py-3.5 text-right font-semibold">
+                                Price
+                            </th>
+                            <th class="w-16 px-4 py-3.5">
+                                <span class="sr-only">Actions</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-100">
@@ -408,27 +416,55 @@ function clearFilters(): void {
                             class="group transition-colors duration-150 hover:bg-neutral-50"
                         >
                             <td class="px-5 py-3.5">
-                                <span class="font-semibold text-neutral-900">{{ item.name }}</span>
+                                <span class="font-semibold text-neutral-900">{{
+                                    item.name
+                                }}</span>
                                 <span
                                     v-if="item.status === 'ARCHIVED'"
                                     class="badge ml-2 border-neutral-200 bg-neutral-100 text-neutral-500"
-                                >Archived</span>
+                                    >Archived</span
+                                >
                                 <span
                                     v-else-if="item.status === 'PURCHASED'"
                                     class="badge ml-2 border-emerald-200 bg-emerald-50 text-emerald-700"
-                                >Purchased</span>
+                                    >Purchased</span
+                                >
                             </td>
-                            <td class="px-4 py-3.5 text-sm text-neutral-500">{{ item.category.name }}</td>
-                            <td class="px-4 py-3.5"><PriorityBadge :value="item.priority" /></td>
-                            <td class="px-4 py-3.5"><PurposeBadge :value="item.purpose" /></td>
-                            <td class="px-4 py-3.5 text-right text-sm font-bold text-neutral-900">
+                            <td class="px-4 py-3.5 text-sm text-neutral-500">
+                                {{ item.category.name }}
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <PriorityBadge :value="item.priority" />
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <PurposeBadge :value="item.purpose" />
+                            </td>
+                            <td
+                                class="px-4 py-3.5 text-right text-sm font-bold text-neutral-900"
+                            >
                                 {{ formatIdr(item.estimated_price) }}
                             </td>
                             <td class="px-4 py-3.5 text-right">
-                                <OverflowMenu
-                                    :items="menuFor(item)"
-                                    @select="(key) => onAction(item, key)"
-                                />
+                                <div
+                                    class="flex items-center justify-end gap-2"
+                                >
+                                    <button
+                                        type="button"
+                                        class="text-sm font-semibold text-indigo-600 hover:text-indigo-800"
+                                        @click="
+                                            router.push({
+                                                name: 'wishlist-detail',
+                                                params: { id: item.id },
+                                            })
+                                        "
+                                    >
+                                        View
+                                    </button>
+                                    <OverflowMenu
+                                        :items="menuFor(item)"
+                                        @select="(key) => onAction(item, key)"
+                                    />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -440,7 +476,10 @@ function clearFilters(): void {
                 v-if="meta.last_page > 1"
                 class="mt-4 flex items-center justify-between text-sm text-neutral-600"
             >
-                <span>Page {{ meta.current_page }} of {{ meta.last_page }} · {{ meta.total }} items</span>
+                <span
+                    >Page {{ meta.current_page }} of {{ meta.last_page }} ·
+                    {{ meta.total }} items</span
+                >
                 <div class="flex gap-2">
                     <button
                         type="button"
@@ -491,8 +530,12 @@ function clearFilters(): void {
                     aria-modal="true"
                     aria-label="Wishlist filters"
                 >
-                    <header class="flex items-center justify-between border-b border-neutral-100 px-5 py-4">
-                        <h2 class="font-bold text-neutral-900">Filters &amp; Sort</h2>
+                    <header
+                        class="flex items-center justify-between border-b border-neutral-100 px-5 py-4"
+                    >
+                        <h2 class="font-bold text-neutral-900">
+                            Filters &amp; Sort
+                        </h2>
                         <button
                             type="button"
                             class="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100"
@@ -505,10 +548,9 @@ function clearFilters(): void {
 
                     <div class="flex-1 space-y-4 overflow-y-auto p-5">
                         <div>
-                            <label
-                                for="drawer-search"
-                                class="field-label"
-                            >Search</label>
+                            <label for="drawer-search" class="field-label"
+                                >Search</label
+                            >
                             <input
                                 id="drawer-search"
                                 v-model="filters.search"
@@ -520,16 +562,17 @@ function clearFilters(): void {
                         </div>
 
                         <div>
-                            <label
-                                for="drawer-category"
-                                class="field-label"
-                            >Category</label>
+                            <label for="drawer-category" class="field-label"
+                                >Category</label
+                            >
                             <select
                                 id="drawer-category"
                                 v-model.number="filters.category_id"
                                 class="input"
                             >
-                                <option :value="undefined">All categories</option>
+                                <option :value="undefined">
+                                    All categories
+                                </option>
                                 <option
                                     v-for="category in categories"
                                     :key="category.id"
@@ -544,7 +587,11 @@ function clearFilters(): void {
                             <legend class="field-label">Priority</legend>
                             <div class="flex gap-2">
                                 <button
-                                    v-for="option in ['HIGH', 'MEDIUM', 'LOW'] as const"
+                                    v-for="option in [
+                                        'HIGH',
+                                        'MEDIUM',
+                                        'LOW',
+                                    ] as const"
                                     :key="option"
                                     type="button"
                                     class="flex-1 rounded-xl border px-2 py-2 text-xs font-semibold capitalize transition-colors duration-150"
@@ -554,7 +601,12 @@ function clearFilters(): void {
                                             : 'border-neutral-300 text-neutral-600 hover:bg-neutral-50'
                                     "
                                     :aria-pressed="filters.priority === option"
-                                    @click="filters.priority = filters.priority === option ? undefined : option"
+                                    @click="
+                                        filters.priority =
+                                            filters.priority === option
+                                                ? undefined
+                                                : option
+                                    "
                                 >
                                     {{ option.toLowerCase() }}
                                 </button>
@@ -575,7 +627,12 @@ function clearFilters(): void {
                                             : 'border-neutral-300 text-neutral-600 hover:bg-neutral-50'
                                     "
                                     :aria-pressed="filters.purpose === option"
-                                    @click="filters.purpose = filters.purpose === option ? undefined : option"
+                                    @click="
+                                        filters.purpose =
+                                            filters.purpose === option
+                                                ? undefined
+                                                : option
+                                    "
                                 >
                                     {{ option.toLowerCase() }}
                                 </button>
@@ -583,10 +640,9 @@ function clearFilters(): void {
                         </fieldset>
 
                         <div>
-                            <label
-                                for="drawer-status"
-                                class="field-label"
-                            >Status</label>
+                            <label for="drawer-status" class="field-label"
+                                >Status</label
+                            >
                             <select
                                 id="drawer-status"
                                 v-model="filters.status"
@@ -599,10 +655,9 @@ function clearFilters(): void {
                         </div>
 
                         <div>
-                            <label
-                                for="drawer-sort"
-                                class="field-label"
-                            >Sort by</label>
+                            <label for="drawer-sort" class="field-label"
+                                >Sort by</label
+                            >
                             <select
                                 id="drawer-sort"
                                 v-model="filters.sort"
@@ -627,7 +682,10 @@ function clearFilters(): void {
                         <button
                             type="button"
                             class="mt-2 w-full rounded-xl px-3 py-2 text-sm font-medium text-neutral-500 hover:bg-neutral-50"
-                            @click="clearFilters(); filtersOpen = false"
+                            @click="
+                                clearFilters();
+                                filtersOpen = false;
+                            "
                         >
                             Clear all filters
                         </button>
@@ -646,13 +704,19 @@ function clearFilters(): void {
 
         <ConfirmDialog
             :open="confirmState.open"
-            :title="confirmState.mode === 'archive' ? 'Archive this item?' : 'Restore this item?'"
+            :title="
+                confirmState.mode === 'archive'
+                    ? 'Archive this item?'
+                    : 'Restore this item?'
+            "
             :message="
                 confirmState.mode === 'archive'
                     ? 'This item will no longer appear in your shopping recommendations.'
                     : 'This item will reappear in your active wishlist and recommendations.'
             "
-            :confirm-label="confirmState.mode === 'archive' ? 'Archive' : 'Restore'"
+            :confirm-label="
+                confirmState.mode === 'archive' ? 'Archive' : 'Restore'
+            "
             :processing="confirmState.processing"
             :danger="confirmState.mode === 'archive'"
             @close="confirmState.open = false"

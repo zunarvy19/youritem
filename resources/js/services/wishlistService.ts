@@ -1,6 +1,13 @@
 import { apiRequest } from '@/services/apiClient';
 import { fetchCategories } from '@/services/categoryService';
-import type { ApiDataResponse, Category, Priority, Purpose, WishlistItem, WishlistStatus } from '@/types';
+import type {
+    ApiDataResponse,
+    Category,
+    Priority,
+    Purpose,
+    WishlistItem,
+    WishlistStatus,
+} from '@/types';
 
 export type WishlistQuery = {
     search?: string;
@@ -20,32 +27,55 @@ export type WishlistPayload = {
     purpose: Purpose;
     estimated_price: number;
     notes?: string | null;
+    product_url?: string | null;
 };
 
-export function fetchWishlistItems(query: WishlistQuery = {}): Promise<{ data: WishlistItem[]; meta: PaginationMeta }> {
+export function fetchWishlistItems(
+    query: WishlistQuery = {},
+): Promise<{ data: WishlistItem[]; meta: PaginationMeta }> {
     return apiRequest('/api/wishlist-items', {
         query: query as Record<string, string | number | boolean | undefined>,
     });
 }
 
-export function fetchWishlistItem(id: number): Promise<ApiDataResponse<WishlistItem>> {
+export function fetchWishlistItem(
+    id: number,
+): Promise<ApiDataResponse<WishlistItem>> {
     return apiRequest(`/api/wishlist-items/${id}`);
 }
 
-export function createWishlistItem(payload: WishlistPayload): Promise<ApiDataResponse<WishlistItem>> {
+export function createWishlistItem(
+    payload: WishlistPayload,
+): Promise<ApiDataResponse<WishlistItem>> {
     return apiRequest('/api/wishlist-items', { method: 'POST', body: payload });
 }
 
-export function updateWishlistItem(id: number, payload: Partial<WishlistPayload>): Promise<ApiDataResponse<WishlistItem>> {
-    return apiRequest(`/api/wishlist-items/${id}`, { method: 'PUT', body: payload });
+export function updateWishlistItem(
+    id: number,
+    payload: Partial<WishlistPayload>,
+): Promise<ApiDataResponse<WishlistItem>> {
+    return apiRequest(`/api/wishlist-items/${id}`, {
+        method: 'PUT',
+        body: payload,
+    });
 }
 
-export function archiveWishlistItem(id: number): Promise<ApiDataResponse<WishlistItem>> {
-    return apiRequest(`/api/wishlist-items/${id}/archive`, { method: 'PATCH', body: {} });
+export function archiveWishlistItem(
+    id: number,
+): Promise<ApiDataResponse<WishlistItem>> {
+    return apiRequest(`/api/wishlist-items/${id}/archive`, {
+        method: 'PATCH',
+        body: {},
+    });
 }
 
-export function restoreWishlistItem(id: number): Promise<ApiDataResponse<WishlistItem>> {
-    return apiRequest(`/api/wishlist-items/${id}/restore`, { method: 'PATCH', body: {} });
+export function restoreWishlistItem(
+    id: number,
+): Promise<ApiDataResponse<WishlistItem>> {
+    return apiRequest(`/api/wishlist-items/${id}/restore`, {
+        method: 'PATCH',
+        body: {},
+    });
 }
 
 export function useCategoriesLoader(): () => Promise<Category[]> {

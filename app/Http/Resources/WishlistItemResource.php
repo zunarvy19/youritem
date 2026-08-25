@@ -18,6 +18,12 @@ use Illuminate\Support\Carbon;
  * @property Purpose $purpose
  * @property int $estimated_price
  * @property string|null $notes
+ * @property string|null $product_url
+ * @property string|null $preview_title
+ * @property string|null $preview_description
+ * @property string|null $preview_image_url
+ * @property string|null $preview_site_name
+ * @property Carbon|null $preview_fetched_at
  * @property WishlistStatus $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -40,6 +46,14 @@ class WishlistItemResource extends JsonResource
             'purpose' => $this->purpose->value,
             'estimated_price' => $this->estimated_price,
             'notes' => $this->notes,
+            'product_url' => $this->product_url,
+            'preview' => $this->product_url === null ? null : [
+                'title' => $this->preview_title,
+                'description' => $this->preview_description,
+                'image_url' => $this->preview_image_url,
+                'site_name' => $this->preview_site_name ?? parse_url($this->product_url, PHP_URL_HOST),
+                'fetched_at' => $this->preview_fetched_at?->toIso8601String(),
+            ],
             'status' => $this->status->value,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),

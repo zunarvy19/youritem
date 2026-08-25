@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { icons  } from '@/components/icons';
-import type {IconName} from '@/components/icons';
+import { icons } from '@/components/icons';
+import type { IconName } from '@/components/icons';
 
 defineProps<{ name: IconName }>();
 </script>
@@ -15,10 +15,6 @@ defineProps<{ name: IconName }>();
         class="h-5 w-5 shrink-0"
         aria-hidden="true"
     >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            :d="icons[name]"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" :d="icons[name]" />
     </svg>
 </template>

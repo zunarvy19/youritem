@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\CurrentUserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetTransactionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ShoppingController;
@@ -33,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     Route::get('/budget', [BudgetController::class, 'show'])->name('api.budget.show');
     Route::put('/budget', [BudgetController::class, 'update'])->name('api.budget.update');
+    Route::post('/budget/transactions', [BudgetTransactionController::class, 'store'])->name('api.budget-transactions.store');
 
     Route::get('/shopping/recommendations', [ShoppingController::class, 'recommend'])->name('api.shopping.recommend');
 

@@ -20,6 +20,12 @@ const router = createRouter({
                     component: () => import('@/pages/WishlistPage.vue'),
                 },
                 {
+                    path: 'wishlist/:id',
+                    name: 'wishlist-detail',
+                    component: () => import('@/pages/WishlistDetailPage.vue'),
+                    props: true,
+                },
+                {
                     path: 'shopping',
                     name: 'shopping',
                     component: () => import('@/pages/ShoppingPage.vue'),

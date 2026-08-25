@@ -23,7 +23,10 @@ function onInput(event: Event): void {
 
     // Keep the caret at the end; sufficient for amount-style inputs.
     const input = event.target as HTMLInputElement;
-    const formatted = digits === '' ? '' : new Intl.NumberFormat('id-ID').format(Number(digits));
+    const formatted =
+        digits === ''
+            ? ''
+            : new Intl.NumberFormat('id-ID').format(Number(digits));
 
     if (input.value !== formatted) {
         input.value = formatted;

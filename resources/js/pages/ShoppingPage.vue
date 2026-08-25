@@ -26,7 +26,11 @@ const loading = ref(true);
 const loadError = ref(false);
 
 const budget = ref(0);
-const priorityFirst = reactive({ items: [] as RecommendationItem[], total: 0, remaining: 0 });
+const priorityFirst = reactive({
+    items: [] as RecommendationItem[],
+    total: 0,
+    remaining: 0,
+});
 const optimization = reactive({
     items: [] as RecommendationItem[],
     total: 0,
@@ -78,7 +82,11 @@ function openBudgetModal(): void {
 }
 
 async function saveBudget(): Promise<void> {
-    if (newBudget.value === null || !Number.isInteger(newBudget.value) || newBudget.value < 0) {
+    if (
+        newBudget.value === null ||
+        !Number.isInteger(newBudget.value) ||
+        newBudget.value < 0
+    ) {
         budgetError.value = 'Budget must be a whole number of zero or more.';
 
         return;
@@ -94,7 +102,9 @@ async function saveBudget(): Promise<void> {
         await load();
     } catch (error) {
         budgetError.value =
-            error instanceof ApiError ? error.message : 'Unable to update the budget.';
+            error instanceof ApiError
+                ? error.message
+                : 'Unable to update the budget.';
     } finally {
         budgetProcessing.value = false;
     }
@@ -123,10 +133,7 @@ async function onPurchased(): Promise<void> {
             subtitle="Your recommendations based on your current budget."
         />
 
-        <div
-            v-if="loading"
-            class="space-y-4"
-        >
+        <div v-if="loading" class="space-y-4">
             <div class="h-44 animate-pulse rounded-3xl bg-neutral-200/80" />
             <div
                 v-for="n in 3"
@@ -142,11 +149,7 @@ async function onPurchased(): Promise<void> {
         />
 
         <template v-else>
-            <BudgetHero
-                :amount="budget"
-                editable
-                @edit="openBudgetModal"
-            />
+            <BudgetHero :amount="budget" editable @edit="openBudgetModal" />
 
             <!-- Priority First — the primary decision -->
             <section
@@ -155,7 +158,10 @@ async function onPurchased(): Promise<void> {
             >
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2.5">
-                        <span class="badge border-emerald-600 bg-emerald-600 text-white">Recommended</span>
+                        <span
+                            class="badge border-emerald-600 bg-emerald-600 text-white"
+                            >Recommended</span
+                        >
                         <h2
                             id="pf-heading"
                             class="text-lg font-bold text-neutral-900"
@@ -163,7 +169,9 @@ async function onPurchased(): Promise<void> {
                             Priority First
                         </h2>
                     </div>
-                    <p class="text-sm text-neutral-500">What should you buy first?</p>
+                    <p class="text-sm text-neutral-500">
+                        What should you buy first?
+                    </p>
                 </div>
 
                 <!-- Empty state -->
@@ -171,27 +179,28 @@ async function onPurchased(): Promise<void> {
                     v-if="!priorityFirst.items.length"
                     class="mt-4 rounded-xl bg-white p-6 text-center"
                 >
-                    <p class="text-base font-semibold text-neutral-900">Nothing to buy right now.</p>
+                    <p class="text-base font-semibold text-neutral-900">
+                        Nothing to buy right now.
+                    </p>
                     <p class="mt-1 text-sm text-neutral-500">
-                        You don't currently have enough budget for any active wishlist item.
+                        You don't currently have enough budget for any active
+                        wishlist item.
                     </p>
                     <div class="mt-4 flex flex-wrap justify-center gap-3">
-                        <RouterLink
-                            to="/wishlist"
-                            class="btn-secondary btn-sm"
-                        >View Wishlist</RouterLink>
+                        <RouterLink to="/wishlist" class="btn-secondary btn-sm"
+                            >View Wishlist</RouterLink
+                        >
                         <button
                             type="button"
                             class="btn-primary btn-sm"
                             @click="openBudgetModal"
-                        >Manage Budget</button>
+                        >
+                            Manage Budget
+                        </button>
                     </div>
                 </div>
 
-                <ol
-                    v-else
-                    class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2"
-                >
+                <ol v-else class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
                     <li
                         v-for="(item, index) in priorityFirst.items"
                         :key="item.id"
@@ -211,26 +220,22 @@ async function onPurchased(): Promise<void> {
                 >
                     <div class="flex gap-2">
                         <dt class="text-neutral-500">Recommended Total</dt>
-                        <dd class="font-bold text-neutral-900">{{ formatIdr(priorityFirst.total) }}</dd>
+                        <dd class="font-bold text-neutral-900">
+                            {{ formatIdr(priorityFirst.total) }}
+                        </dd>
                     </div>
                     <div class="flex gap-2">
                         <dt class="text-neutral-500">Remaining Budget</dt>
-                        <dd class="font-bold text-emerald-700">{{ formatIdr(priorityFirst.remaining) }}</dd>
+                        <dd class="font-bold text-emerald-700">
+                            {{ formatIdr(priorityFirst.remaining) }}
+                        </dd>
                     </div>
                 </dl>
             </section>
 
             <!-- Budget Optimization — alternative strategy -->
-            <section
-                class="mt-6"
-                aria-labelledby="opt-heading"
-            >
-                <h2
-                    id="opt-heading"
-                    class="sr-only"
-                >
-                    Budget Optimization
-                </h2>
+            <section class="mt-6" aria-labelledby="opt-heading">
+                <h2 id="opt-heading" class="sr-only">Budget Optimization</h2>
                 <BudgetOptimizationCard
                     :items="optimization.items"
                     :total="optimization.total"
@@ -254,10 +259,14 @@ async function onPurchased(): Promise<void> {
                     >
                         Can't Afford Yet
                     </h2>
-                    <p class="text-sm text-neutral-500">Items you may want to save for.</p>
+                    <p class="text-sm text-neutral-500">
+                        Items you may want to save for.
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                    class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                >
                     <UnaffordableItemCard
                         v-for="item in unaffordableItems"
                         :key="item.id"
@@ -275,29 +284,20 @@ async function onPurchased(): Promise<void> {
             max-width="max-w-sm"
             @close="budgetOpen = false"
         >
-            <form
-                class="space-y-4"
-                novalidate
-                @submit.prevent="saveBudget"
-            >
+            <form class="space-y-4" novalidate @submit.prevent="saveBudget">
                 <p class="text-sm text-neutral-500">
                     Current budget:
-                    <strong class="text-neutral-900">Rp{{ budget.toLocaleString('id-ID') }}</strong>
+                    <strong class="text-neutral-900"
+                        >Rp{{ budget.toLocaleString('id-ID') }}</strong
+                    >
                 </p>
 
                 <div>
-                    <label
-                        for="new-budget"
-                        class="field-label"
-                    >New budget *</label>
-                    <MoneyInput
-                        id="new-budget"
-                        v-model="newBudget"
-                    />
-                    <p
-                        v-if="budgetError"
-                        class="field-error"
+                    <label for="new-budget" class="field-label"
+                        >New budget *</label
                     >
+                    <MoneyInput id="new-budget" v-model="newBudget" />
+                    <p v-if="budgetError" class="field-error">
                         {{ budgetError }}
                     </p>
                 </div>

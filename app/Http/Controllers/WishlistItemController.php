@@ -7,6 +7,7 @@ use App\Enums\WishlistStatus;
 use App\Http\Requests\StoreWishlistItemRequest;
 use App\Http\Requests\UpdateWishlistItemRequest;
 use App\Http\Resources\WishlistItemResource;
+use App\Jobs\FetchWishlistPreview;
 use App\Models\User;
 use App\Models\WishlistItem;
 use Illuminate\Database\Eloquent\Builder;
@@ -53,6 +54,10 @@ class WishlistItemController extends Controller
             ['status' => WishlistStatus::Active],
         ));
 
+        if ($item->product_url !== null) {
+            FetchWishlistPreview::dispatch($item->id, $item->product_url);
+        }
+
         return response()->json([
             'data' => new WishlistItemResource($item->load('category')),
             'message' => 'Wishlist item added.',
@@ -73,7 +78,17 @@ class WishlistItemController extends Controller
         Gate::authorize('update', $wishlistItem);
         $this->assertEditable($wishlistItem);
 
+        $oldUrl = $wishlistItem->product_url;
         $wishlistItem->update($request->validated());
+        if ($wishlistItem->product_url !== $oldUrl) {
+            $wishlistItem->update([
+                'preview_title' => null, 'preview_description' => null, 'preview_image_url' => null,
+                'preview_site_name' => null, 'preview_fetched_at' => null,
+            ]);
+            if ($wishlistItem->product_url !== null) {
+                FetchWishlistPreview::dispatch($wishlistItem->id, $wishlistItem->product_url);
+            }
+        }
 
         return response()->json([
             'data' => new WishlistItemResource($wishlistItem->load('category')),

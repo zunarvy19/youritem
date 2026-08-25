@@ -19,9 +19,35 @@ export type WishlistItem = {
     purpose: Purpose;
     estimated_price: number;
     notes: string | null;
+    product_url: string | null;
+    preview: {
+        title: string | null;
+        description: string | null;
+        image_url: string | null;
+        site_name: string | null;
+        fetched_at: string | null;
+    } | null;
     status: WishlistStatus;
     created_at: string | null;
     updated_at: string | null;
+};
+
+export type BudgetTransactionType =
+    'INCOME' | 'EXPENSE' | 'ADJUSTMENT' | 'OPENING_BALANCE';
+export type BudgetTransaction = {
+    id: number;
+    type: BudgetTransactionType;
+    amount: number;
+    description: string | null;
+    occurred_at: string;
+    purchase: { id: number; wishlist_item_name: string | null } | null;
+};
+export type BudgetOverview = {
+    amount: number;
+    month: string;
+    income: number;
+    expense: number;
+    transactions: BudgetTransaction[];
 };
 
 export type AuthUser = {
@@ -49,8 +75,6 @@ export type UnaffordableItem = {
     estimated_price: number;
     amount_needed: number;
 };
-;
-
 export type RecommendationResult = {
     available_budget: number;
     priority_first: {

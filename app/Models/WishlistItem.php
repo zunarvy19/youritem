@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Purpose $purpose
  * @property int $estimated_price
  * @property string|null $notes
+ * @property string|null $product_url
  * @property WishlistStatus $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -34,6 +35,12 @@ use Illuminate\Support\Carbon;
     'purpose',
     'estimated_price',
     'notes',
+    'product_url',
+    'preview_title',
+    'preview_description',
+    'preview_image_url',
+    'preview_site_name',
+    'preview_fetched_at',
     'status',
 ])]
 class WishlistItem extends Model
@@ -53,6 +60,7 @@ class WishlistItem extends Model
             'purpose' => Purpose::class,
             'status' => WishlistStatus::class,
             'estimated_price' => 'integer',
+            'preview_fetched_at' => 'datetime',
         ];
     }
 

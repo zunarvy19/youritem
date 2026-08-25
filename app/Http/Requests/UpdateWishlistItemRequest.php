@@ -32,6 +32,7 @@ class UpdateWishlistItemRequest extends FormRequest
             'purpose' => ['sometimes', 'required', Rule::enum(Purpose::class)],
             'estimated_price' => ['sometimes', 'required', 'integer', 'min:1'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'product_url' => ['nullable', 'url:http,https', 'max:2048'],
         ];
     }
 }

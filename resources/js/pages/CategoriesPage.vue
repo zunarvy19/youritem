@@ -74,8 +74,8 @@ function openEdit(category: Category): void {
 
 async function submit(): Promise<void> {
     if (processing.value) {
-return;
-}
+        return;
+    }
 
     processing.value = true;
     fieldErrors.value = {};
@@ -113,8 +113,8 @@ async function toggleStatus(category: Category): Promise<void> {
 
 async function confirmDelete(): Promise<void> {
     if (!deleting.value || processing.value) {
-return;
-}
+        return;
+    }
 
     processing.value = true;
 

@@ -18,7 +18,10 @@ defineProps<{
 const route = useRoute();
 
 function isActive(item: NavItem): boolean {
-    return route.path === item.to || (item.to !== '/' && route.path.startsWith(`${item.to}/`));
+    return (
+        route.path === item.to ||
+        (item.to !== '/' && route.path.startsWith(`${item.to}/`))
+    );
 }
 </script>
 
@@ -43,8 +46,8 @@ function isActive(item: NavItem): boolean {
                                 ? 'text-indigo-600'
                                 : 'bg-indigo-50 text-indigo-700'
                             : compact
-                                ? 'text-neutral-400'
-                                : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900',
+                              ? 'text-neutral-400'
+                              : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900',
                     ]"
                     :aria-current="isActive(item) ? 'page' : undefined"
                 >

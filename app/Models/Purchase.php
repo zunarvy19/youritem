@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $purchased_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property WishlistItem $wishlistItem
  */
 #[Fillable(['user_id', 'wishlist_item_id', 'actual_price', 'purchased_at'])]
 class Purchase extends Model
@@ -47,5 +49,11 @@ class Purchase extends Model
     public function wishlistItem(): BelongsTo
     {
         return $this->belongsTo(WishlistItem::class);
+    }
+
+    /** @return HasOne<BudgetTransaction, $this> */
+    public function budgetTransaction(): HasOne
+    {
+        return $this->hasOne(BudgetTransaction::class);
     }
 }

@@ -44,12 +44,14 @@ const priceInvalid = computed(
 
 async function submit(): Promise<void> {
     if (processing.value || props.item === null) {
-return;
-}
+        return;
+    }
 
     if (priceInvalid.value) {
         fieldErrors.value = {
-            actual_price: ['Purchase price must be a whole number greater than zero.'],
+            actual_price: [
+                'Purchase price must be a whole number greater than zero.',
+            ],
         };
 
         return;
@@ -81,28 +83,38 @@ return;
         max-width="max-w-sm"
         @close="emit('close')"
     >
-        <form
-            class="space-y-4"
-            novalidate
-            @submit.prevent="submit"
-        >
+        <form class="space-y-4" novalidate @submit.prevent="submit">
             <div class="rounded-xl bg-neutral-50 px-4 py-3">
-                <p class="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase">Item</p>
+                <p
+                    class="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase"
+                >
+                    Item
+                </p>
                 <p class="mt-0.5 font-bold text-neutral-900">{{ item.name }}</p>
             </div>
 
             <dl class="space-y-2 rounded-xl bg-neutral-50 px-4 py-3 text-sm">
                 <div class="flex justify-between">
                     <dt class="text-neutral-500">Estimated price</dt>
-                    <dd class="font-medium">{{ formatIdr(item.estimated_price) }}</dd>
+                    <dd class="font-medium">
+                        {{ formatIdr(item.estimated_price) }}
+                    </dd>
                 </div>
-                <div class="flex justify-between border-t border-neutral-200/70 pt-2">
+                <div
+                    class="flex justify-between border-t border-neutral-200/70 pt-2"
+                >
                     <dt class="text-neutral-500">Available budget</dt>
-                    <dd class="font-medium">{{ formatIdr(availableBudget) }}</dd>
+                    <dd class="font-medium">
+                        {{ formatIdr(availableBudget) }}
+                    </dd>
                 </div>
                 <div
                     class="flex justify-between"
-                    :class="remaining < 0 ? 'font-bold text-rose-600' : 'font-bold text-emerald-700'"
+                    :class="
+                        remaining < 0
+                            ? 'font-bold text-rose-600'
+                            : 'font-bold text-emerald-700'
+                    "
                 >
                     <dt>Remaining budget</dt>
                     <dd>{{ formatIdr(Math.max(0, remaining)) }}</dd>
@@ -110,21 +122,15 @@ return;
             </dl>
 
             <div>
-                <label
-                    for="purchase-price"
-                    class="field-label"
-                >Actual purchase price *</label>
-                <MoneyInput
-                    id="purchase-price"
-                    v-model="form.actual_price"
-                />
-                <p class="mt-1 text-xs text-neutral-400">
-                    May differ from the estimate — the actual amount is what gets deducted.
-                </p>
-                <p
-                    v-if="fieldErrors.actual_price"
-                    class="field-error"
+                <label for="purchase-price" class="field-label"
+                    >Actual purchase price *</label
                 >
+                <MoneyInput id="purchase-price" v-model="form.actual_price" />
+                <p class="mt-1 text-xs text-neutral-400">
+                    May differ from the estimate — the actual amount is what
+                    gets deducted.
+                </p>
+                <p v-if="fieldErrors.actual_price" class="field-error">
                     {{ fieldErrors.actual_price[0] }}
                 </p>
             </div>

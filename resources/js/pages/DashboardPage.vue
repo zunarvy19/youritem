@@ -41,7 +41,9 @@ const pfRemaining = ref(0);
 const optimizationItems = ref<RecommendationItem[]>([]);
 const optimizationMeta = reactive({ total: 0, remaining: 0, utilization: 0 });
 const unaffordableItems = ref<UnaffordableItem[]>([]);
-const wishlistByCategory = ref<{ name: string; count: number; value: number }[]>([]);
+const wishlistByCategory = ref<
+    { name: string; count: number; value: number }[]
+>([]);
 
 async function load(): Promise<void> {
     loading.value = true;
@@ -81,7 +83,9 @@ function applyRecommendations(result: RecommendationResult): void {
 
 function applyWishlist(items: WishlistItem[]): void {
     wishlistCount.value = items.length;
-    highPriorityCount.value = items.filter((item) => item.priority === 'HIGH').length;
+    highPriorityCount.value = items.filter(
+        (item) => item.priority === 'HIGH',
+    ).length;
 
     const groups = new Map<string, { count: number; value: number }>();
 
@@ -118,18 +122,21 @@ const greeting = computed(() => {
     const hour = new Date().getHours();
 
     if (hour < 12) {
-return 'Good morning';
-}
+        return 'Good morning';
+    }
 
     if (hour < 18) {
-return 'Good afternoon';
-}
+        return 'Good afternoon';
+    }
 
     return 'Good evening';
 });
 
 const formatDate = (value: string): string =>
-    new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    new Date(value).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+    });
 
 const maxCategoryValue = computed(() =>
     Math.max(...wishlistByCategory.value.map((group) => group.value), 1),
@@ -143,19 +150,13 @@ const maxCategoryValue = computed(() =>
             subtitle="Here's your purchase overview."
         >
             <template #actions>
-                <RouterLink
-                    to="/shopping"
-                    class="btn-primary btn-sm"
-                >
+                <RouterLink to="/shopping" class="btn-primary btn-sm">
                     View Shopping
                 </RouterLink>
             </template>
         </PageHeader>
 
-        <div
-            v-if="loading"
-            class="space-y-4"
-        >
+        <div v-if="loading" class="space-y-4">
             <div class="h-44 animate-pulse rounded-3xl bg-neutral-200/80" />
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div
@@ -200,10 +201,7 @@ const maxCategoryValue = computed(() =>
             </div>
 
             <!-- Recommendation overview -->
-            <section
-                class="mt-10"
-                aria-labelledby="recommendations-heading"
-            >
+            <section class="mt-10" aria-labelledby="recommendations-heading">
                 <h2
                     id="recommendations-heading"
                     class="text-lg font-bold text-neutral-900"
@@ -215,24 +213,37 @@ const maxCategoryValue = computed(() =>
                 </p>
 
                 <!-- Priority First — primary -->
-                <div class="mt-5 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-5">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
+                <div
+                    class="mt-5 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-5"
+                >
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-2"
+                    >
                         <div class="flex items-center gap-2.5">
-                            <span class="badge border-emerald-600 bg-emerald-600 text-white">Recommended</span>
-                            <h3 class="font-bold text-neutral-900">Priority First</h3>
+                            <span
+                                class="badge border-emerald-600 bg-emerald-600 text-white"
+                                >Recommended</span
+                            >
+                            <h3 class="font-bold text-neutral-900">
+                                Priority First
+                            </h3>
                         </div>
-                        <p class="text-xs text-neutral-500">What should you buy first?</p>
+                        <p class="text-xs text-neutral-500">
+                            What should you buy first?
+                        </p>
                     </div>
 
                     <p
                         v-if="!priorityFirst.length"
                         class="mt-4 rounded-xl bg-white px-4 py-4 text-sm text-neutral-500"
                     >
-                        Nothing affordable right now — add items or increase your budget.
+                        Nothing affordable right now — add items or increase
+                        your budget.
                         <RouterLink
                             to="/shopping"
                             class="ml-1 font-medium text-indigo-600 underline underline-offset-2"
-                        >Go to Shopping</RouterLink>
+                            >Go to Shopping</RouterLink
+                        >
                     </p>
 
                     <div
@@ -253,9 +264,13 @@ const maxCategoryValue = computed(() =>
                         class="mt-3 text-sm text-neutral-600"
                     >
                         Recommended total
-                        <strong class="text-neutral-900">{{ formatIdr(pfTotal) }}</strong>
+                        <strong class="text-neutral-900">{{
+                            formatIdr(pfTotal)
+                        }}</strong>
                         · Remaining budget
-                        <strong class="text-neutral-900">{{ formatIdr(pfRemaining) }}</strong>
+                        <strong class="text-neutral-900">{{
+                            formatIdr(pfRemaining)
+                        }}</strong>
                     </p>
                 </div>
 
@@ -275,21 +290,25 @@ const maxCategoryValue = computed(() =>
                     v-if="unaffordableItems.length"
                     class="mt-4 rounded-2xl border border-rose-200/80 bg-rose-50/40 p-5"
                 >
-                    <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-2"
+                    >
                         <div class="flex items-center gap-2.5">
-                            <AppIcon
-                                name="lock"
-                                class="text-rose-400"
-                            />
-                            <h3 class="font-bold text-neutral-900">Can't Afford Yet</h3>
+                            <AppIcon name="lock" class="text-rose-400" />
+                            <h3 class="font-bold text-neutral-900">
+                                Can't Afford Yet
+                            </h3>
                         </div>
                         <RouterLink
                             to="/wishlist"
                             class="text-xs font-medium text-indigo-600 underline underline-offset-2"
-                        >Review wishlist</RouterLink>
+                            >Review wishlist</RouterLink
+                        >
                     </div>
 
-                    <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    <div
+                        class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+                    >
                         <UnaffordableItemCard
                             v-for="item in unaffordableItems"
                             :key="item.id"
@@ -313,7 +332,8 @@ const maxCategoryValue = computed(() =>
                         <RouterLink
                             to="/purchases"
                             class="text-xs font-medium text-indigo-600 underline underline-offset-2"
-                        >View all</RouterLink>
+                            >View all</RouterLink
+                        >
                     </div>
 
                     <div class="card divide-y divide-neutral-100 p-2">
@@ -329,15 +349,22 @@ const maxCategoryValue = computed(() =>
                             class="flex items-center justify-between gap-3 px-3 py-3"
                         >
                             <div class="min-w-0">
-                                <p class="truncate text-sm font-semibold text-neutral-900">
+                                <p
+                                    class="truncate text-sm font-semibold text-neutral-900"
+                                >
                                     {{ purchase.wishlist_item.name ?? '—' }}
                                 </p>
                                 <p class="text-xs text-neutral-400">
                                     {{ formatDate(purchase.purchased_at) }} ·
-                                    {{ purchase.wishlist_item.category.name ?? '' }}
+                                    {{
+                                        purchase.wishlist_item.category.name ??
+                                        ''
+                                    }}
                                 </p>
                             </div>
-                            <span class="shrink-0 text-sm font-semibold text-emerald-700">
+                            <span
+                                class="shrink-0 text-sm font-semibold text-emerald-700"
+                            >
                                 −{{ formatIdr(purchase.actual_price) }}
                             </span>
                         </div>
@@ -355,7 +382,8 @@ const maxCategoryValue = computed(() =>
                         <RouterLink
                             to="/wishlist"
                             class="text-xs font-medium text-indigo-600 underline underline-offset-2"
-                        >Manage</RouterLink>
+                            >Manage</RouterLink
+                        >
                     </div>
 
                     <div class="card space-y-4 p-5">
@@ -369,14 +397,27 @@ const maxCategoryValue = computed(() =>
                             v-for="group in wishlistByCategory"
                             :key="group.name"
                         >
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="font-medium text-neutral-700">{{ group.name }}</span>
-                                <span class="text-neutral-400">{{ group.count }} item{{ group.count > 1 ? 's' : '' }} · {{ formatIdr(group.value) }}</span>
+                            <div
+                                class="flex items-center justify-between text-sm"
+                            >
+                                <span class="font-medium text-neutral-700">{{
+                                    group.name
+                                }}</span>
+                                <span class="text-neutral-400"
+                                    >{{ group.count }} item{{
+                                        group.count > 1 ? 's' : ''
+                                    }}
+                                    · {{ formatIdr(group.value) }}</span
+                                >
                             </div>
-                            <div class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
+                            <div
+                                class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100"
+                            >
                                 <div
                                     class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-violet-400"
-                                    :style="{ width: `${Math.round((group.value / maxCategoryValue) * 100)}%` }"
+                                    :style="{
+                                        width: `${Math.round((group.value / maxCategoryValue) * 100)}%`,
+                                    }"
                                 />
                             </div>
                         </div>

@@ -2,7 +2,11 @@ export class ApiError extends Error {
     public readonly status: number;
     public readonly errors: Record<string, string[]>;
 
-    constructor(status: number, message: string, errors: Record<string, string[]> = {}) {
+    constructor(
+        status: number,
+        message: string,
+        errors: Record<string, string[]> = {},
+    ) {
         super(message);
         this.name = 'ApiError';
         this.status = status;
@@ -50,7 +54,10 @@ interface RequestOptions {
     query?: Record<string, string | number | boolean | undefined>;
 }
 
-export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function apiRequest<T>(
+    path: string,
+    options: RequestOptions = {},
+): Promise<T> {
     const method = options.method ?? 'GET';
     const headers = new Headers({
         Accept: 'application/json',
@@ -95,10 +102,16 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
             method,
             headers,
             credentials: 'include',
-            body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+            body:
+                options.body !== undefined
+                    ? JSON.stringify(options.body)
+                    : undefined,
         });
     } catch {
-        throw new ApiError(0, 'Network error. Please check your connection and try again.');
+        throw new ApiError(
+            0,
+            'Network error. Please check your connection and try again.',
+        );
     }
 
     const payload = await response.json().catch(() => null);
@@ -106,7 +119,8 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     if (!response.ok) {
         throw new ApiError(
             response.status,
-            (payload?.message as string) ?? `Request failed with status ${response.status}.`,
+            (payload?.message as string) ??
+                `Request failed with status ${response.status}.`,
             (payload?.errors as Record<string, string[]>) ?? {},
         );
     }

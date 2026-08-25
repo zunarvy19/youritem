@@ -55,7 +55,10 @@ const totalSpent = computed(() =>
 
 /** Estimated total of this page's items, to surface savings/overspend context. */
 const estimatedTotal = computed(() =>
-    purchases.value.reduce((sum, purchase) => sum + (purchase.wishlist_item.estimated_price ?? 0), 0),
+    purchases.value.reduce(
+        (sum, purchase) => sum + (purchase.wishlist_item.estimated_price ?? 0),
+        0,
+    ),
 );
 
 const savings = computed(() => estimatedTotal.value - totalSpent.value);
@@ -64,8 +67,8 @@ function actualPriceTone(purchase: Purchase): string {
     const estimated = purchase.wishlist_item.estimated_price;
 
     if (estimated === null) {
-return 'text-neutral-400';
-}
+        return 'text-neutral-400';
+    }
 
     return purchase.actual_price < estimated
         ? 'font-medium text-emerald-600'
@@ -106,10 +109,9 @@ return 'text-neutral-400';
             description="Items you buy will appear here."
         >
             <template #actions>
-                <RouterLink
-                    to="/shopping"
-                    class="btn-primary btn-sm"
-                >Go to Shopping</RouterLink>
+                <RouterLink to="/shopping" class="btn-primary btn-sm"
+                    >Go to Shopping</RouterLink
+                >
             </template>
         </EmptyState>
 
@@ -128,10 +130,14 @@ return 'text-neutral-400';
                             </p>
                             <p class="text-xs text-neutral-500">
                                 {{ formatDate(purchase.purchased_at) }} ·
-                                {{ purchase.wishlist_item.category.name ?? '—' }}
+                                {{
+                                    purchase.wishlist_item.category.name ?? '—'
+                                }}
                             </p>
                         </div>
-                        <span class="shrink-0 font-bold text-neutral-900">{{ formatIdr(purchase.actual_price) }}</span>
+                        <span class="shrink-0 font-bold text-neutral-900">{{
+                            formatIdr(purchase.actual_price)
+                        }}</span>
                     </div>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
                         <PurposeBadge
@@ -144,13 +150,20 @@ return 'text-neutral-400';
                         />
                         <span
                             v-if="
-                                purchase.wishlist_item.estimated_price !== null &&
-                                    purchase.wishlist_item.estimated_price !== purchase.actual_price
+                                purchase.wishlist_item.estimated_price !==
+                                    null &&
+                                purchase.wishlist_item.estimated_price !==
+                                    purchase.actual_price
                             "
                             class="text-xs"
                             :class="actualPriceTone(purchase)"
                         >
-                            est. {{ formatIdr(purchase.wishlist_item.estimated_price) }}
+                            est.
+                            {{
+                                formatIdr(
+                                    purchase.wishlist_item.estimated_price,
+                                )
+                            }}
                         </span>
                     </div>
                 </li>
@@ -160,14 +173,22 @@ return 'text-neutral-400';
             <div class="card hidden overflow-hidden lg:block">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="border-b border-neutral-100 bg-neutral-50/70 text-xs tracking-wide text-neutral-400 uppercase">
+                        <tr
+                            class="border-b border-neutral-100 bg-neutral-50/70 text-xs tracking-wide text-neutral-400 uppercase"
+                        >
                             <th class="px-5 py-3.5 font-semibold">Item</th>
                             <th class="px-4 py-3.5 font-semibold">Category</th>
                             <th class="px-4 py-3.5 font-semibold">Type</th>
                             <th class="px-4 py-3.5 font-semibold">Priority</th>
-                            <th class="px-4 py-3.5 text-right font-semibold">Estimated</th>
-                            <th class="px-4 py-3.5 text-right font-semibold">Actual Price</th>
-                            <th class="px-4 py-3.5 text-right font-semibold">Purchased</th>
+                            <th class="px-4 py-3.5 text-right font-semibold">
+                                Estimated
+                            </th>
+                            <th class="px-4 py-3.5 text-right font-semibold">
+                                Actual Price
+                            </th>
+                            <th class="px-4 py-3.5 text-right font-semibold">
+                                Purchased
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-100">
@@ -176,11 +197,15 @@ return 'text-neutral-400';
                             :key="purchase.id"
                             class="transition-colors duration-150 hover:bg-neutral-50"
                         >
-                            <td class="px-5 py-3.5 font-semibold text-neutral-900">
+                            <td
+                                class="px-5 py-3.5 font-semibold text-neutral-900"
+                            >
                                 {{ purchase.wishlist_item.name ?? '—' }}
                             </td>
                             <td class="px-4 py-3.5 text-sm text-neutral-500">
-                                {{ purchase.wishlist_item.category.name ?? '—' }}
+                                {{
+                                    purchase.wishlist_item.category.name ?? '—'
+                                }}
                             </td>
                             <td class="px-4 py-3.5">
                                 <PurposeBadge
@@ -196,13 +221,27 @@ return 'text-neutral-400';
                                 />
                                 <span v-else>—</span>
                             </td>
-                            <td class="px-4 py-3.5 text-right text-sm text-neutral-400">
-                                {{ purchase.wishlist_item.estimated_price !== null ? formatIdr(purchase.wishlist_item.estimated_price) : '—' }}
+                            <td
+                                class="px-4 py-3.5 text-right text-sm text-neutral-400"
+                            >
+                                {{
+                                    purchase.wishlist_item.estimated_price !==
+                                    null
+                                        ? formatIdr(
+                                              purchase.wishlist_item
+                                                  .estimated_price,
+                                          )
+                                        : '—'
+                                }}
                             </td>
-                            <td class="px-4 py-3.5 text-right text-sm font-bold text-neutral-900">
+                            <td
+                                class="px-4 py-3.5 text-right text-sm font-bold text-neutral-900"
+                            >
                                 {{ formatIdr(purchase.actual_price) }}
                             </td>
-                            <td class="px-4 py-3.5 text-right text-sm text-neutral-500">
+                            <td
+                                class="px-4 py-3.5 text-right text-sm text-neutral-500"
+                            >
                                 {{ formatDate(purchase.purchased_at) }}
                             </td>
                         </tr>
@@ -215,26 +254,28 @@ return 'text-neutral-400';
                 class="card mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-4 text-sm"
             >
                 <span class="text-neutral-500">
-                    {{ meta.total }} purchase{{ meta.total === 1 ? '' : 's' }} · page
-                    {{ meta.current_page }} of {{ meta.last_page }}
+                    {{ meta.total }} purchase{{ meta.total === 1 ? '' : 's' }} ·
+                    page {{ meta.current_page }} of {{ meta.last_page }}
                 </span>
                 <span class="text-neutral-600">
                     Spent on this page:
-                    <strong class="text-neutral-900">{{ formatIdr(totalSpent) }}</strong>
+                    <strong class="text-neutral-900">{{
+                        formatIdr(totalSpent)
+                    }}</strong>
                     <span
                         v-if="savings !== 0 && estimatedTotal > 0"
                         class="ml-2 font-medium"
-                        :class="savings > 0 ? 'text-emerald-700' : 'text-rose-600'"
+                        :class="
+                            savings > 0 ? 'text-emerald-700' : 'text-rose-600'
+                        "
                     >
-                        ({{ savings > 0 ? 'saved' : 'over' }} {{ formatIdr(Math.abs(savings)) }} vs estimate)
+                        ({{ savings > 0 ? 'saved' : 'over' }}
+                        {{ formatIdr(Math.abs(savings)) }} vs estimate)
                     </span>
                 </span>
             </div>
 
-            <div
-                v-if="meta.last_page > 1"
-                class="mt-4 flex justify-end gap-2"
-            >
+            <div v-if="meta.last_page > 1" class="mt-4 flex justify-end gap-2">
                 <button
                     type="button"
                     class="btn-secondary btn-sm"

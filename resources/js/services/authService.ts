@@ -8,14 +8,23 @@ interface CredentialsPayload {
     password_confirmation?: string;
 }
 
-export function registerUser(payload: Required<Pick<CredentialsPayload, 'name' | 'email' | 'password' | 'password_confirmation'>>): Promise<ApiDataResponse<AuthUser>> {
+export function registerUser(
+    payload: Required<
+        Pick<
+            CredentialsPayload,
+            'name' | 'email' | 'password' | 'password_confirmation'
+        >
+    >,
+): Promise<ApiDataResponse<AuthUser>> {
     return apiRequest('/api/register', {
         method: 'POST',
         body: payload,
     });
 }
 
-export function loginUser(payload: Pick<CredentialsPayload, 'email' | 'password'>): Promise<ApiDataResponse<AuthUser>> {
+export function loginUser(
+    payload: Pick<CredentialsPayload, 'email' | 'password'>,
+): Promise<ApiDataResponse<AuthUser>> {
     return apiRequest('/api/login', {
         method: 'POST',
         body: payload,

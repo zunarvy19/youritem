@@ -37,6 +37,9 @@ it('completes a valid purchase and updates all state consistently', function ():
     expect($item->refresh()->status->value)->toBe('PURCHASED')
         ->and($user->budget()->first()->amount)->toBe(550_000)
         ->and($user->purchases()->count())->toBe(1);
+
+    $ledger = $user->budgetTransactions()->firstOrFail();
+    expect($ledger->type->value)->toBe('EXPENSE')->and($ledger->amount)->toBe(-450_000)->and($ledger->purchase_id)->not->toBeNull();
 });
 
 it('uses the actual purchase price for budget deduction, not the estimated price', function (): void {

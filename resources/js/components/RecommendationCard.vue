@@ -31,18 +31,24 @@ const emit = defineEmits<{ buy: [item: RecommendationItem] }>();
                     <PurposeBadge :value="item.purpose" />
                 </div>
 
-                <h3 class="mt-2 truncate text-base font-bold text-neutral-900">{{ item.name }}</h3>
+                <h3 class="mt-2 truncate text-base font-bold text-neutral-900">
+                    {{ item.name }}
+                </h3>
                 <p class="text-xs text-neutral-500">{{ item.category.name }}</p>
 
                 <div class="mt-3">
-                    <p class="text-lg font-bold text-neutral-900">{{ formatIdr(item.estimated_price) }}</p>
+                    <p class="text-lg font-bold text-neutral-900">
+                        {{ formatIdr(item.estimated_price) }}
+                    </p>
                 </div>
 
                 <div
                     v-if="item.reasons?.length"
                     class="mt-3 rounded-xl bg-emerald-50/70 px-3 py-2.5"
                 >
-                    <p class="mb-1 text-[11px] font-semibold tracking-wide text-emerald-700 uppercase">
+                    <p
+                        class="mb-1 text-[11px] font-semibold tracking-wide text-emerald-700 uppercase"
+                    >
                         Why this item?
                     </p>
                     <ul class="space-y-0.5 text-sm text-emerald-800">

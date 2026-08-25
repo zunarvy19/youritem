@@ -31,6 +31,7 @@ class StoreWishlistItemRequest extends FormRequest
             'purpose' => ['required', Rule::enum(Purpose::class)],
             'estimated_price' => ['required', 'integer', 'min:1'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'product_url' => ['nullable', 'url:http,https', 'max:2048'],
         ];
     }
 }

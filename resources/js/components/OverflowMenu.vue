@@ -5,7 +5,7 @@ import AppIcon from '@/components/AppIcon.vue';
 export interface MenuItem {
     key: string;
     label: string;
-    icon?: 'pencil' | 'archive' | 'restore' | 'trash';
+    icon?: 'eye' | 'pencil' | 'archive' | 'restore' | 'trash';
     danger?: boolean;
 }
 

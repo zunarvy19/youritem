@@ -44,7 +44,9 @@ function onKeydown(event: KeyboardEvent): void {
                     :class="maxWidth ?? 'max-w-md'"
                 >
                     <div class="mb-5 flex items-start justify-between gap-4">
-                        <h2 class="text-lg font-bold text-neutral-900">{{ title }}</h2>
+                        <h2 class="text-lg font-bold text-neutral-900">
+                            {{ title }}
+                        </h2>
                         <button
                             type="button"
                             class="-mr-2 rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"

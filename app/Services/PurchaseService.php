@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\BudgetTransactionType;
 use App\Enums\WishlistStatus;
 use App\Models\Budget;
 use App\Models\Purchase;
@@ -83,6 +84,14 @@ class PurchaseService
                 $budget->amount = max(0, $budget->amount - $actualPrice);
                 $budget->save();
             }
+
+            $user->budgetTransactions()->create([
+                'purchase_id' => $purchase->id,
+                'type' => BudgetTransactionType::Expense,
+                'amount' => -$actualPrice,
+                'description' => $locked->name,
+                'occurred_at' => $purchase->purchased_at,
+            ]);
 
             return $purchase->refresh();
         });

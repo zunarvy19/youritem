@@ -21,7 +21,7 @@ class BudgetController extends Controller
 
         return response()->json([
             'data' => [
-                'amount' => $this->budgetService->getAvailableBudget($user),
+                ...$this->budgetService->overview($user),
             ],
         ]);
     }
@@ -31,7 +31,7 @@ class BudgetController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $budget = $this->budgetService->updateBudget($user, (int) $request->validated('amount'));
+        $budget = $this->budgetService->adjustBalance($user, (int) $request->validated('amount'), (string) $request->validated('description'));
 
         return response()->json([
             'data' => [

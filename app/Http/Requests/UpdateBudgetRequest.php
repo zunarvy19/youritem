@@ -11,13 +11,9 @@ class UpdateBudgetRequest extends FormRequest
         return true;
     }
 
-    /**
-     * @return array<string, array<int|string, mixed>>
-     */
+    /** @return array<string, array<int, string>> */
     public function rules(): array
     {
-        return [
-            'amount' => ['required', 'integer', 'min:0'],
-        ];
+        return ['amount' => ['required', 'integer', 'min:0'], 'description' => ['required', 'string', 'max:255']];
     }
 }

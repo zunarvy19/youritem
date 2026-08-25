@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useI18n  } from '@/composables/useI18n';
-import type {Locale} from '@/composables/useI18n';
+import { useI18n } from '@/composables/useI18n';
+import type { Locale } from '@/composables/useI18n';
 
 const { locale, setLocale, t } = useI18n();
 

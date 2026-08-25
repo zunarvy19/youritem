@@ -32,7 +32,11 @@ const { toasts, dismiss } = useToast();
                     <span class="flex items-center gap-2.5">
                         <span
                             class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                            :class="toast.kind === 'success' ? 'bg-emerald-500' : 'bg-rose-500'"
+                            :class="
+                                toast.kind === 'success'
+                                    ? 'bg-emerald-500'
+                                    : 'bg-rose-500'
+                            "
                             aria-hidden="true"
                         >
                             {{ toast.kind === 'success' ? '✓' : '!' }}
@@ -47,7 +51,7 @@ const { toasts, dismiss } = useToast();
                         Dismiss
                     </button>
                 </div>
-              </TransitionGroup>
+            </TransitionGroup>
         </div>
     </Teleport>
 </template>
