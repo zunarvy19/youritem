@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import AppNavList from '@/components/AppNavList.vue';
 import type { NavItem } from '@/components/AppNavList.vue';
+import BrandLogo from '@/components/BrandLogo.vue';
 import ToastHost from '@/components/ToastHost.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useI18n } from '@/composables/useI18n';
@@ -90,14 +91,10 @@ async function handleLogout(): Promise<void> {
             class="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-neutral-200/80 bg-white px-4 py-6 lg:flex"
         >
             <RouterLink to="/" class="mb-8 flex items-center gap-2.5 px-2">
-                <span
-                    class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-sm font-extrabold text-white"
-                >
-                    Yi
-                </span>
+                <BrandLogo class="h-10 w-12" />
                 <span
                     class="text-lg font-extrabold tracking-tight text-neutral-900"
-                    >YourItem</span
+                    >WiseBuy</span
                 >
             </RouterLink>
 
@@ -149,13 +146,9 @@ async function handleLogout(): Promise<void> {
             class="sticky top-0 z-30 flex items-center justify-between border-b border-neutral-200/80 bg-white/90 px-4 py-3 backdrop-blur lg:hidden"
         >
             <RouterLink to="/" class="flex items-center gap-2">
-                <span
-                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-extrabold text-white"
-                >
-                    Yi
-                </span>
+                <BrandLogo class="h-8 w-10" />
                 <span class="font-extrabold tracking-tight text-neutral-900"
-                    >YourItem</span
+                    >WiseBuy</span
                 >
             </RouterLink>
             <div class="flex items-center gap-2">

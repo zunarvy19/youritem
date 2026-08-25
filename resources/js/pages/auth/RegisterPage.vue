@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+import BrandLogo from '@/components/BrandLogo.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useI18n } from '@/composables/useI18n';
@@ -66,14 +67,10 @@ async function submit(): Promise<void> {
     >
         <div class="absolute top-4 right-4"><LanguageSwitcher /></div>
         <div class="mb-8 flex items-center gap-2.5">
-            <span
-                class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-sm font-extrabold text-white"
-            >
-                Yi
-            </span>
-            <span class="text-xl font-extrabold tracking-tight text-neutral-900"
-                >YourItem</span
-            >
+            <BrandLogo class="h-14 w-17" />
+            <!-- <span class="text-xl font-extrabold tracking-tight text-neutral-900"
+                >WiseBuy</span
+            > -->
         </div>
 
         <div class="w-full max-w-sm">
