@@ -122,19 +122,19 @@ onMounted(load);
                         class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-emerald-700"
                         @click="open('INCOME')"
                     >
-                        + {{ t('budget.add_income') }} Add Income
+                        + {{ t('budget.add_income') }}
                     </button>
                     <button
                         class="rounded-xl bg-white/15 px-4 py-2.5 text-sm font-bold text-white ring-1 ring-white/30"
                         @click="open('EXPENSE')"
                     >
-                        − {{ t('budget.add_expense') }} Add Expense
+                        − {{ t('budget.add_expense') }}
                     </button>
                     <button
                         class="rounded-xl px-4 py-2.5 text-sm font-semibold text-indigo-100 hover:bg-white/10"
                         @click="open('ADJUSTMENT')"
                     >
-                        {{ t('budget.adjust') }} Adjust
+                        {{ t('budget.adjust') }}
                     </button>
                 </div>
             </div>
