@@ -4,6 +4,7 @@ import { RouterView, useRouter } from 'vue-router';
 import AppNavList from '@/components/AppNavList.vue';
 import type { NavItem } from '@/components/AppNavList.vue';
 import BrandLogo from '@/components/BrandLogo.vue';
+import MobileBottomNavigation from '@/components/MobileBottomNavigation.vue';
 import ToastHost from '@/components/ToastHost.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useI18n } from '@/composables/useI18n';
@@ -45,34 +46,6 @@ const profileNav = computed<NavItem[]>(() => [
     {
         name: 'settings',
         label: t('nav.settings'),
-        to: '/settings',
-        icon: 'user',
-    },
-]);
-
-const mobileNav = computed<NavItem[]>(() => [
-    { name: 'dashboard', label: t('nav.home'), to: '/', icon: 'home' },
-    {
-        name: 'wishlist',
-        label: t('nav.wishlist'),
-        to: '/wishlist',
-        icon: 'heart',
-    },
-    {
-        name: 'shopping',
-        label: t('nav.shopping'),
-        to: '/shopping',
-        icon: 'bag',
-    },
-    {
-        name: 'purchases',
-        label: t('nav.history'),
-        to: '/purchases',
-        icon: 'clock',
-    },
-    {
-        name: 'settings',
-        label: t('nav.profile'),
         to: '/settings',
         icon: 'user',
     },
@@ -171,12 +144,7 @@ async function handleLogout(): Promise<void> {
             </div>
         </main>
 
-        <!-- Mobile bottom navigation -->
-        <nav
-            class="fixed inset-x-0 bottom-0 z-30 border-t border-neutral-200/80 bg-white/95 pt-1 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
-        >
-            <AppNavList :items="mobileNav" compact />
-        </nav>
+        <MobileBottomNavigation />
 
         <ToastHost />
     </div>

@@ -53,6 +53,10 @@ const messages: Record<Locale, Record<string, string>> = {
         'common.error': 'Something went wrong.',
         'common.connection_error':
             'Please check your connection and try again.',
+        'common.close': 'Close',
+        'nav.more': 'More',
+        'nav.more_menu': 'More menu',
+        'nav.mobile_navigation': 'Mobile navigation',
         'categories.title': 'Categories',
         'categories.subtitle':
             'Create and manage how your wishlist is organised.',
@@ -158,6 +162,10 @@ const messages: Record<Locale, Record<string, string>> = {
         'common.retry': 'Coba Lagi',
         'common.error': 'Terjadi kesalahan.',
         'common.connection_error': 'Periksa koneksi Anda lalu coba lagi.',
+        'common.close': 'Tutup',
+        'nav.more': 'Lainnya',
+        'nav.more_menu': 'Menu lainnya',
+        'nav.mobile_navigation': 'Navigasi mobile',
         'categories.title': 'Kategori',
         'categories.subtitle':
             'Buat dan kelola pengelompokan daftar keinginan Anda.',

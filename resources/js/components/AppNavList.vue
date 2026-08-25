@@ -27,19 +27,18 @@ function isActive(item: NavItem): boolean {
 
 <template>
     <nav :aria-label="compact ? 'Primary' : 'Main navigation'">
-        <ul :class="compact ? 'flex w-full justify-around' : 'space-y-1'">
-            <li
-                v-for="item in items"
-                :key="item.name"
-                class="w-full"
-                :class="compact ? 'max-w-24' : ''"
-            >
+        <ul
+            :class="
+                compact ? 'grid w-full auto-cols-fr grid-flow-col' : 'space-y-1'
+            "
+        >
+            <li v-for="item in items" :key="item.name" class="w-full min-w-0">
                 <RouterLink
                     :to="item.to"
                     class="relative flex items-center rounded-xl text-sm font-medium transition-colors duration-150"
                     :class="[
                         compact
-                            ? 'flex-col gap-0.5 px-2 py-2 text-[11px]'
+                            ? 'min-w-0 flex-col gap-0.5 px-0.5 py-2 text-[10px] sm:px-2 sm:text-[11px]'
                             : 'gap-3 px-3 py-2.5',
                         isActive(item)
                             ? compact

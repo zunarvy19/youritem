@@ -109,7 +109,7 @@ onMounted(load);
         />
         <template v-else-if="overview">
             <div
-                class="rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-700 p-6 text-white shadow-lg sm:p-8"
+                class="rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-700 p-5 text-white shadow-lg sm:rounded-3xl sm:p-8"
             >
                 <p class="text-sm font-medium text-indigo-100">
                     {{ t('budget.available') }}
@@ -117,21 +117,23 @@ onMounted(load);
                 <p class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
                     {{ formatIdr(overview.amount) }}
                 </p>
-                <div class="mt-6 flex flex-wrap gap-3">
+                <div
+                    class="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3"
+                >
                     <button
-                        class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-emerald-700"
+                        class="min-w-0 rounded-xl bg-white px-3 py-2.5 text-sm font-bold text-emerald-700 sm:px-4"
                         @click="open('INCOME')"
                     >
                         + {{ t('budget.add_income') }}
                     </button>
                     <button
-                        class="rounded-xl bg-white/15 px-4 py-2.5 text-sm font-bold text-white ring-1 ring-white/30"
+                        class="min-w-0 rounded-xl bg-white/15 px-3 py-2.5 text-sm font-bold text-white ring-1 ring-white/30 sm:px-4"
                         @click="open('EXPENSE')"
                     >
                         − {{ t('budget.add_expense') }}
                     </button>
                     <button
-                        class="rounded-xl px-4 py-2.5 text-sm font-semibold text-indigo-100 hover:bg-white/10"
+                        class="col-span-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-indigo-100 hover:bg-white/10 sm:col-auto sm:px-4"
                         @click="open('ADJUSTMENT')"
                     >
                         {{ t('budget.adjust') }}
@@ -139,20 +141,22 @@ onMounted(load);
                 </div>
             </div>
 
-            <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                <div class="card p-5">
-                    <p class="text-sm text-neutral-500">
+            <div class="mt-4 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-4">
+                <div class="card min-w-0 p-4 sm:p-5">
+                    <p class="text-xs leading-5 text-neutral-500 sm:text-sm">
                         {{ t('budget.income_month', { month: monthLabel }) }}
                     </p>
-                    <p class="mt-1 text-2xl font-bold text-emerald-600">
+                    <p
+                        class="mt-1 text-xl font-bold text-emerald-600 sm:text-2xl"
+                    >
                         +{{ formatIdr(overview.income) }}
                     </p>
                 </div>
-                <div class="card p-5">
-                    <p class="text-sm text-neutral-500">
+                <div class="card min-w-0 p-4 sm:p-5">
+                    <p class="text-xs leading-5 text-neutral-500 sm:text-sm">
                         {{ t('budget.expense_month', { month: monthLabel }) }}
                     </p>
-                    <p class="mt-1 text-2xl font-bold text-rose-600">
+                    <p class="mt-1 text-xl font-bold text-rose-600 sm:text-2xl">
                         −{{ formatIdr(overview.expense) }}
                     </p>
                 </div>
@@ -174,7 +178,7 @@ onMounted(load);
                     <li
                         v-for="transaction in overview.transactions"
                         :key="transaction.id"
-                        class="flex items-center justify-between gap-4 px-5 py-4"
+                        class="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5"
                     >
                         <div class="min-w-0">
                             <p class="truncate font-semibold text-neutral-900">
@@ -195,7 +199,7 @@ onMounted(load);
                             </p>
                         </div>
                         <p
-                            class="shrink-0 font-bold"
+                            class="self-end font-bold sm:shrink-0 sm:self-auto"
                             :class="
                                 transaction.amount >= 0
                                     ? 'text-emerald-600'
@@ -251,7 +255,7 @@ onMounted(load);
                     />
                 </div>
                 <p v-if="error" class="field-error">{{ error }}</p>
-                <div class="flex justify-end gap-3">
+                <div class="grid grid-cols-2 gap-3 sm:flex sm:justify-end">
                     <button
                         type="button"
                         class="btn-secondary"

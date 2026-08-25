@@ -48,9 +48,7 @@ const utilizationPct = computed(() => Math.round(props.utilization * 100));
                     v-if="items.length"
                     class="badge border-violet-200 bg-white text-violet-700"
                 >
-                    {{ items.length }} item{{
-                        items.length > 1 ? 's' : ''
-                    }}
+                    {{ items.length }} item{{ items.length > 1 ? 's' : '' }}
                     together
                 </span>
             </div>
